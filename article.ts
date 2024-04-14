@@ -16,7 +16,7 @@ export function toArticle(
     attribution: context.getActorUri(blog.handle),
     to: new URL("https://www.w3.org/ns/activitystreams#Public"),
     summary: post.title,
-    content: post.html,
+    content: post.plain,
     published: post.published,
     url,
     replies: new Collection({
