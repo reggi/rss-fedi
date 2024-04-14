@@ -19,6 +19,48 @@ export type Post = {
   published: Temporal.Instant;
 };
 
+function convertToDate(dateStr: string): Date {
+  // Define months mapping from short month name to month number (0-based index as expected by JavaScript Date)
+
+  // Regular expression to extract date components
+  const months: { [key: string]: number } = {
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11,
+  };
+
+  const regex =
+    /^...,\s+(\d{2})\s+(\w{3})\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})\s+GMT$/;
+  const matches = dateStr.match(regex);
+
+  if (!matches) {
+    throw new Error("Invalid date format");
+  }
+
+  const day = parseInt(matches[1], 10);
+  const month = months[matches[2]];
+  const year = parseInt(matches[3], 10);
+  const hour = parseInt(matches[4], 10);
+  const minute = parseInt(matches[5], 10);
+  const second = parseInt(matches[6], 10);
+
+  if (month === undefined) {
+    throw new Error("Invalid month");
+  }
+
+  // Create a Date object from extracted components
+  return new Date(Date.UTC(year, month, day, hour, minute, second));
+}
+
 export function parsefeed(xml: string): Post[] {
   const doc = new DOMParser().parseFromString(xml, "text/html");
 
@@ -54,7 +96,9 @@ export function parsefeed(xml: string): Post[] {
     const uuid = uuidv7();
     const targetDate = Temporal.Instant.from("2024-04-12T00:00:00Z");
     const currentDate = Temporal.Now.instant();
-    const pubTemporal = Temporal.Instant.from(new Date(pubDate).toISOString());
+    const pubTemporal = Temporal.Instant.from(
+      new Date(convertToDate(pubDate)).toISOString()
+    );
     const published =
       Temporal.Instant.compare(pubTemporal, targetDate) < 0
         ? currentDate
