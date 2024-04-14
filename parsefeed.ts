@@ -96,9 +96,8 @@ export function parsefeed(xml: string): Post[] {
     const uuid = uuidv7();
     const targetDate = Temporal.Instant.from("2024-04-12T00:00:00Z");
     const currentDate = Temporal.Now.instant();
-    const pubTemporal = Temporal.Instant.from(
-      new Date(convertToDate(pubDate)).toISOString()
-    );
+    const pubDateObject = new Date(convertToDate(pubDate)).toISOString();
+    const pubTemporal = Temporal.Instant.from(pubDateObject);
     const published =
       Temporal.Instant.compare(pubTemporal, targetDate) < 0
         ? currentDate
@@ -107,7 +106,7 @@ export function parsefeed(xml: string): Post[] {
     console.log(published.toString());
 
     all.push({
-      published,
+      published: pubDateObject,
       uuid,
       id,
       title,
