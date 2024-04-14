@@ -94,19 +94,19 @@ export function parsefeed(xml: string): Post[] {
     if (!pubDate)
       throw new Error("Failed to parse the pubDate in the RSS feed.");
     const uuid = uuidv7();
-    const targetDate = Temporal.Instant.from("2024-04-12T00:00:00Z");
-    const currentDate = Temporal.Now.instant();
-    const pubDateObject = new Date(convertToDate(pubDate)).toISOString();
-    const pubTemporal = Temporal.Instant.from(pubDateObject);
-    const published =
-      Temporal.Instant.compare(pubTemporal, targetDate) < 0
-        ? currentDate
-        : pubTemporal;
+    // const targetDate = Temporal.Instant.from("2024-04-12T00:00:00Z");
+    // const currentDate = Temporal.Now.instant();
+    // const pubDateObject = new Date(convertToDate(pubDate)).toISOString();
+    // const pubTemporal = Temporal.Instant.from(pubDateObject);
+    // const published =
+    //   Temporal.Instant.compare(pubTemporal, targetDate) < 0
+    //     ? currentDate
+    //     : pubTemporal;
 
-    console.log(published.toString());
+    // console.log(published.toString());
 
     all.push({
-      published: pubDateObject,
+      published: Temporal.Now.instant(),
       uuid,
       id,
       title,
