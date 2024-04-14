@@ -1,4 +1,6 @@
-export function keystore<T>(kv: Deno.Kv, key: string) {
+import { Post } from "./parsefeed.ts";
+
+export function keystore<T extends Post = Post>(kv: Deno.Kv, key: string) {
   const itemKey = (item: any) => [key, item.pubDate.getTime(), item.id];
   return {
     kv,
@@ -32,7 +34,10 @@ export function keystore<T>(kv: Deno.Kv, key: string) {
       );
       const posts: T[] = [];
       for await (const entry of it) {
-        posts.push(entry.value);
+        posts.push({
+          ...entry.value,
+          published: Temporal.Instant.from(entry.value.published),
+        });
       }
       return { posts, nextCursor: posts.length < limit ? null : it.cursor };
     },

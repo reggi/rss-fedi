@@ -54,11 +54,11 @@ export function parsefeed(xml: string): Post[] {
     const uuid = uuidv7();
     const targetDate = Temporal.Instant.from("2024-04-12T00:00:00Z");
     const currentDate = Temporal.Now.instant();
-
+    const pubTemporal = Temporal.Instant.from(new Date(pubDate).toISOString());
     const published =
-      Temporal.Instant.compare(Temporal.Instant.from(pubDate), targetDate) < 0
+      Temporal.Instant.compare(pubTemporal, targetDate) < 0
         ? currentDate
-        : Temporal.Instant.from(pubDate);
+        : pubTemporal;
 
     console.log(published.toString());
 
