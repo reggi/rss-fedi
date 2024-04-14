@@ -207,6 +207,8 @@ federation.setNodeInfoDispatcher("/nodeinfo/2.1", async (_ctx) => {
   const { posts } = await getPosts(1);
   const recentPost = posts.length > 0 ? posts[0] : null;
   const now = Temporal.Now.instant();
+  const thirtyDaysAgo = now.subtract({ hours: 24 * 30 });
+  const halfYearAgo = now.subtract({ hours: 24 * 30 * 6 });
   return {
     software: {
       name: "fedify-example-blog",
@@ -221,12 +223,12 @@ federation.setNodeInfoDispatcher("/nodeinfo/2.1", async (_ctx) => {
         total: 1,
         activeMonth:
           recentPost == null ||
-          recentPost.published < now.subtract({ hours: 24 * 30 })
+          Temporal.Instant.compare(recentPost.published, thirtyDaysAgo) < 0
             ? 0
             : 1,
         activeHalfyear:
           recentPost == null ||
-          recentPost.published < now.subtract({ hours: 24 * 30 * 6 })
+          Temporal.Instant.compare(recentPost.published, halfYearAgo) < 0
             ? 0
             : 1,
       },
