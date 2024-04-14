@@ -14,8 +14,8 @@ export function keystore<T extends Post = Post>(kv: Deno.Kv, key: string) {
     },
     async ensure(item: T) {
       const has = await kv.get<T>(itemKey(item));
-      if (has.value) return has;
-      return await kv
+      if (has.value) return { post: has, existed: true };
+      const post = await kv
         .atomic()
         .set(itemKey(item), {
           ...item,
@@ -23,6 +23,7 @@ export function keystore<T extends Post = Post>(kv: Deno.Kv, key: string) {
         })
         .sum(["count"], 1n)
         .commit();
+      return { post, existed: false };
     },
     async items() {
       const items = await kv.list({ prefix: [key] });

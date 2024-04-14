@@ -15,6 +15,9 @@ export {
   isActor,
   Create,
   Activity,
+  type Actor,
+  type ActorTypeName,
+  getActorClassByTypeName,
 } from "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0";
 export {
   DenoKvMessageQueue,

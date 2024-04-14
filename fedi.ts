@@ -23,6 +23,7 @@ import { feedUrl } from "./env.ts";
 import { name, summary, handle as accountHandle } from "./env.ts";
 import { parse } from "jsr:@std/semver@^0.220.1";
 import { Temporal } from "npm:@js-temporal/polyfill";
+import { getFollowersAsActors } from "./followers.ts";
 
 const kv = await openKv();
 const {
@@ -32,12 +33,26 @@ const {
   count: countPosts,
 } = await keystore(kv, "feed");
 
-export const trigger = async () => {
+export const trigger = async (req: Request) => {
   const feed = await fetch(feedUrl);
   const body = await feed.text();
   const parsedFeed = parsefeed(body);
   for (const post of parsedFeed) {
-    await ensure(post);
+    const { existed } = await ensure(post);
+    if (existed) continue;
+    const blog = await getBlog();
+    const fedCtx = await federation.createContext(req);
+    // Enqueues a `Create` activity to the outbox:
+    await fedCtx.sendActivity(
+      { handle: blog.handle },
+      await getFollowersAsActors(),
+      new Create({
+        id: new URL(`/posts/${post.uuid}#activity`, req.url),
+        actor: fedCtx.getActorUri(blog.handle),
+        to: new URL("https://www.w3.org/ns/activitystreams#Public"),
+        object: toArticle(fedCtx, blog, post, []),
+      })
+    );
   }
   return new Response("OK");
 };
@@ -60,8 +75,6 @@ export const federation = new Federation<void>({
 // the WebFinger resource:
 federation
   .setActorDispatcher("/users/{handle}", (ctx, handle, key) => {
-    // In this demo, we're assuming that there is only one account for
-    // this server: @demo@fedify-demo.deno.land
     if (handle != accountHandle) return null;
     return new Person({
       id: ctx.getActorUri(handle),

@@ -1,0 +1,25 @@
+{
+  "imports": {
+    "$fresh/": "https://deno.land/x/fresh@1.6.8/",
+    "@js-temporal/polyfill": "npm:@js-temporal/polyfill@^0.4.4",
+    "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
+    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
+    "@std/dotenv/load": "jsr:@std/dotenv@^0.220.1/load",
+    "@std/path": "jsr:@std/path@^0.220.1",
+    "@std/semver": "jsr:@std/semver@^0.220.1",
+    "@fedify/fedify": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/mod.ts",
+    "@fedify/fedify/federation": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/federation/mod.ts",
+    "@fedify/fedify/httpsig": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/httpsig/mod.ts",
+    "@fedify/fedify/runtime": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/runtime/mod.ts",
+    "@fedify/fedify/vocab": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/vocab/mod.ts",
+    "@fedify/fedify/webfinger": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/webfinger/mod.ts",
+    "@fedify/fedify/x/fresh": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/x/fresh.ts",
+    "@fedify/fedify/x/denokv": "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/x/denokv.ts",
+    "markdown-it": "npm:markdown-it@^14.0.0",
+    "preact": "https://esm.sh/preact@10.19.6",
+    "preact/": "https://esm.sh/preact@10.19.6/",
+    "scrypt": "https://deno.land/x/scrypt@v4.3.1/mod.ts",
+    "sanitize-html": "npm:sanitize-html@^2.12.1",
+    "uuidv7": "npm:uuidv7@^0.6.3"
+  }
+}

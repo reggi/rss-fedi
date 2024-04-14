@@ -31,6 +31,6 @@ const staticBlogData: Blog = {
 };
 
 // Stubbed getBlog function - returns static data
-export async function getBlog(): Promise<Blog | null> {
+export async function getBlog(): Promise<Blog> {
   return staticBlogData;
 }
