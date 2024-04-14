@@ -12,7 +12,7 @@ Deno.serve(async (req: Request) => {
   console.log(url.pathname);
 
   if (url.pathname === "/trigger") {
-    return await trigger();
+    return await trigger(req);
   } else if (url.pathname === "/wipe") {
     return await wipe();
   } else if (url.pathname === "/") {
