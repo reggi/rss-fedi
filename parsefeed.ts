@@ -19,6 +19,17 @@ export type Post = {
   published: Temporal.Instant;
 };
 
+export type PostIn = {
+  id: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  uuid: string;
+  html: string;
+  plain: string;
+  published: Date;
+};
+
 function convertToDate(dateStr: string): Date {
   // Define months mapping from short month name to month number (0-based index as expected by JavaScript Date)
 
@@ -61,7 +72,7 @@ function convertToDate(dateStr: string): Date {
   return new Date(Date.UTC(year, month, day, hour, minute, second));
 }
 
-export function parsefeed(xml: string): Post[] {
+export function parsefeed(xml: string): PostIn[] {
   const doc = new DOMParser().parseFromString(xml, "text/html");
 
   if (!doc) {
@@ -96,8 +107,8 @@ export function parsefeed(xml: string): Post[] {
     const uuid = uuidv7();
     const targetDate = Temporal.Instant.from("2024-04-12T00:00:00Z");
     const currentDate = Temporal.Now.instant();
-    const pubDateObject = new Date(convertToDate(pubDate)).toISOString();
-    const pubTemporal = Temporal.Instant.from(pubDateObject);
+    const pubDateObject = new Date(convertToDate(pubDate));
+    const pubTemporal = Temporal.Instant.from(pubDateObject.toISOString());
     const published =
       Temporal.Instant.compare(pubTemporal, targetDate) < 0
         ? currentDate
