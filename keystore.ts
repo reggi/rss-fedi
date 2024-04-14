@@ -10,7 +10,7 @@ export function keystore<T extends Post = Post>(kv: Deno.Kv, key: string) {
       for await (const entry of entries) {
         kv.delete(entry.key);
       }
-      await kv.set(["count"], 0n);
+      await kv.delete(["count"]);
     },
     async ensure(item: T) {
       const has = await kv.get<T>(itemKey(item));
