@@ -14,7 +14,10 @@ export function keystore<T extends Post = Post>(kv: Deno.Kv, key: string) {
     async ensure(item: T) {
       const has = await kv.get<T>(itemKey(item));
       if (has.value) return has;
-      return await kv.set(itemKey(item), item);
+      return await kv.set(itemKey(item), {
+        ...item,
+        published: item.published.toString(),
+      });
     },
     async items() {
       const items = await kv.list({ prefix: [key] });
