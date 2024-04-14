@@ -8,8 +8,11 @@ import {
   exportJwk,
   generateCryptoKeyPair,
   importJwk,
-} from "jsr:@fedify/fedify";
-import { DenoKvMessageQueue, DenoKvStore } from "jsr:@fedify/fedify/denokv";
+} from "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0";
+import {
+  DenoKvMessageQueue,
+  DenoKvStore,
+} from "jsr:@fedify/fedify@0.5.0-dev.96+12a69dc0/x/denokv";
 
 // We'll use a Deno KV database for storing the list of followers,
 // and the internal outbox queue of the following `Federation` object:
