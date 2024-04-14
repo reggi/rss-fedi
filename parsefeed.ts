@@ -4,7 +4,7 @@ import {
 } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 import { uuidv7 } from "npm:uuidv7@^0.6.3";
 import { removeCDATA, stripHTML } from "./striphtml.ts";
-import { type Temporal } from "npm:@js-temporal/polyfill";
+import { Temporal } from "npm:@js-temporal/polyfill";
 
 /// <reference lib="dom" />
 
