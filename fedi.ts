@@ -23,6 +23,7 @@ import { parsefeed } from "./parsefeed.ts";
 import { feedUrl } from "./env.ts";
 import { name, summary, handle as accountHandle } from "./env.ts";
 import { parse } from "jsr:@std/semver@^0.220.1";
+import { Temporal } from "npm:@js-temporal/polyfill";
 
 const kv = await openKv();
 const {
