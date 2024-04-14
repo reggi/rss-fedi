@@ -8,6 +8,9 @@ const kv = await openKv();
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url);
   // The home page:
+
+  console.log(url.pathname);
+
   if (url.pathname === "/trigger") {
     return await trigger();
   } else if (url.pathname === "/") {
