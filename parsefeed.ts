@@ -53,9 +53,7 @@ export function parsefeed(xml: string): Post[] {
       throw new Error("Failed to parse the pubDate in the RSS feed.");
     const uuid = uuidv7();
     all.push({
-      published: Temporal.Instant.fromEpochMilliseconds(
-        new Date(pubDate).getDate()
-      ),
+      published: new Date(),
       uuid,
       id,
       title,
