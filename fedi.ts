@@ -40,7 +40,6 @@ export const trigger = async (req: Request) => {
   for (const post of parsedFeed) {
     const { existed } = await ensure(post);
     if (existed) continue;
-    console.log({ existed });
     const blog = await getBlog();
     const fedCtx = await federation.createContext(req);
     // Enqueues a `Create` activity to the outbox:
@@ -52,7 +51,8 @@ export const trigger = async (req: Request) => {
         actor: fedCtx.getActorUri(blog.handle),
         to: new URL("https://www.w3.org/ns/activitystreams#Public"),
         object: toArticle(fedCtx, blog, post, []),
-      })
+      }),
+      { immediate: true }
     );
   }
   return new Response("OK");
