@@ -1,9 +1,5 @@
-import { load } from "https://deno.land/std@0.222.1/dotenv/mod.ts";
-
-const env = await load();
-
 const envGet = (key: string): string => {
-  const value = env[key];
+  const value = Deno.env.get(key);
   if (!value) {
     throw new Error(`Environment variable ${key} not set`);
   }
