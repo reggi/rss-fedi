@@ -17,7 +17,6 @@ import { keystore } from "./keystore.ts";
 import { openKv } from "./kv.ts";
 import { getBlog } from "./blog.ts";
 import { getComments } from "./comment.ts";
-import { Post, PostIn } from "./parsefeed.ts";
 import { toArticle } from "./article.ts";
 import { parsefeed } from "./parsefeed.ts";
 import { feedUrl } from "./env.ts";

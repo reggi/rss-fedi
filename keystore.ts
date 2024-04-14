@@ -14,10 +14,14 @@ export function keystore<T extends Post = Post>(kv: Deno.Kv, key: string) {
     async ensure(item: T) {
       const has = await kv.get<T>(itemKey(item));
       if (has.value) return has;
-      return await kv.set(itemKey(item), {
-        ...item,
-        published: item.published.toString(),
-      });
+      return await kv
+        .atomic()
+        .set(itemKey(item), {
+          ...item,
+          published: item.published.toString(),
+        })
+        .sum(["count"], 1n)
+        .commit();
     },
     async items() {
       const items = await kv.list({ prefix: [key] });
@@ -46,7 +50,7 @@ export function keystore<T extends Post = Post>(kv: Deno.Kv, key: string) {
       return { posts, nextCursor: posts.length < limit ? null : it.cursor };
     },
     async count() {
-      const record = await kv.get([key]);
+      const record = await kv.get(["count"]);
       return (record.value as bigint | null) ?? 0n;
     },
   };
