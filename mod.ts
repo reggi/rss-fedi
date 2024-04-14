@@ -1,6 +1,6 @@
 import { banner, home } from "./banner.ts";
 import { handle } from "./env.ts";
-import { federation, trigger } from "./fedi.ts";
+import { federation, trigger, wipe } from "./fedi.ts";
 import { openKv } from "./kv.ts";
 
 const kv = await openKv();
@@ -13,6 +13,8 @@ Deno.serve(async (req: Request) => {
 
   if (url.pathname === "/trigger") {
     return await trigger();
+  } else if (url.pathname === "/wipe") {
+    return await wipe();
   } else if (url.pathname === "/") {
     const followers: string[] = [];
     for await (const entry of kv.list({ prefix: ["followers"] })) {

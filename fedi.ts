@@ -26,6 +26,7 @@ import { name, summary, handle as accountHandle } from "./env.ts";
 const kv = await openKv();
 const {
   ensure,
+  wipe: wipePosts,
   cursor: getPosts,
   count: countPosts,
 } = await keystore<Post>(kv, "feed");
@@ -37,6 +38,11 @@ export const trigger = async () => {
   for (const post of parsedFeed) {
     await ensure(post);
   }
+  return new Response("OK");
+};
+
+export const wipe = async () => {
+  await wipePosts();
   return new Response("OK");
 };
 
