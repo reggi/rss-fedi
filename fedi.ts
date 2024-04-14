@@ -22,6 +22,7 @@ import { toArticle } from "./article.ts";
 import { parsefeed } from "./parsefeed.ts";
 import { feedUrl } from "./env.ts";
 import { name, summary, handle as accountHandle } from "./env.ts";
+import { parse } from "jsr:@std/semver@^0.220.1";
 
 const kv = await openKv();
 const {
@@ -148,8 +149,6 @@ federation.setFollowingDispatcher(
 
 // Registers the outbox dispatcher, which is responsible for listing
 // activities in the outbox:
-// Registers the outbox dispatcher, which is responsible for listing
-// activities in the outbox:
 federation
   .setOutboxDispatcher(
     "/users/{handle}/outbox",
@@ -197,3 +196,41 @@ federation
     // Treat the empty string as the first cursor:
     return "";
   });
+
+// Registers the NodeInfo dispatcher, which is responsible for providing
+// the server information:
+federation.setNodeInfoDispatcher("/nodeinfo/2.1", async (_ctx) => {
+  const denoJson = {
+    version: "1.0.0",
+  };
+  const { posts } = await getPosts(1);
+  const recentPost = posts.length > 0 ? posts[0] : null;
+  const now = Temporal.Now.instant();
+  return {
+    software: {
+      name: "fedify-example-blog",
+      version: parse(denoJson.version),
+      repository: new URL(
+        "https://github.com/dahlia/fedify/tree/main/examples/blog"
+      ),
+    },
+    protocols: ["activitypub"],
+    usage: {
+      users: {
+        total: 1,
+        activeMonth:
+          recentPost == null ||
+          recentPost.published < now.subtract({ hours: 24 * 30 })
+            ? 0
+            : 1,
+        activeHalfyear:
+          recentPost == null ||
+          recentPost.published < now.subtract({ hours: 24 * 30 * 6 })
+            ? 0
+            : 1,
+      },
+      localComments: 0,
+      localPosts: Number(await countPosts()),
+    },
+  };
+});
