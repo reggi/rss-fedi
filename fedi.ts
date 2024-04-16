@@ -43,17 +43,24 @@ export const trigger = async (req: Request) => {
     const blog = await getBlog();
     const fedCtx = await federation.createContext(req);
     // Enqueues a `Create` activity to the outbox:
-    await fedCtx.sendActivity(
+
+    const create = new Create({
+      id: new URL(`/posts/${post.uuid}#activity`, req.url),
+      actor: fedCtx.getActorUri(blog.handle),
+      to: new URL("https://www.w3.org/ns/activitystreams#Public"),
+      object: toArticle(fedCtx, blog, post, []),
+    });
+
+    console.log({ create });
+
+    const send = await fedCtx.sendActivity(
       { handle: blog.handle },
       await getFollowersAsActors(),
-      new Create({
-        id: new URL(`/posts/${post.uuid}#activity`, req.url),
-        actor: fedCtx.getActorUri(blog.handle),
-        to: new URL("https://www.w3.org/ns/activitystreams#Public"),
-        object: toArticle(fedCtx, blog, post, []),
-      }),
+      create,
       { immediate: true }
     );
+
+    console.log({ send });
   }
   return new Response("OK");
 };
