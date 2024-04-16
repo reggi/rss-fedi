@@ -70,27 +70,3 @@ export function getContentHtml(post: Post): string {
   const md = markdownIt();
   return md.render(post.content);
 }
-
-// Represents a post as an ActivityStreams `Article`:
-export function toArticle(
-  context: RequestContext<void>,
-  blog: Blog,
-  post: Post,
-  comments: Comment[]
-): Article {
-  const url = new URL(`/posts/${post.uuid}`, context.url);
-  return new Article({
-    id: url,
-    attribution: context.getActorUri(blog.handle),
-    to: new URL("https://www.w3.org/ns/activitystreams#Public"),
-    summary: post.title,
-    content: getContentHtml(post),
-    published: post.published,
-    url,
-    replies: new Collection({
-      first: new CollectionPage({
-        items: comments.map((c) => new URL(c.id)),
-      }),
-    }),
-  });
-}
