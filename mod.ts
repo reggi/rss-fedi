@@ -15,8 +15,8 @@ Deno.serve(async (req: Request) => {
   const post = new URLPattern({ pathname: "/posts/:uuid" });
   if (url.pathname === "/trigger") {
     return await trigger(req);
-  } else if (post.test(url.pathname)) {
-    const result = post.exec(url.pathname);
+  } else if (post.test(url)) {
+    const result = post.exec(url);
     if (result) {
       const {
         pathname: {
