@@ -1,11 +1,11 @@
 import { Temporal } from "@js-temporal/polyfill";
-import { RequestContext } from "@fedify/fedify/federation";
-import { Article, Collection, CollectionPage } from "@fedify/fedify/vocab";
+import { RequestContext } from "../deps.ts";
+import { Article, Collection, CollectionPage } from "../deps.ts";
 import markdownIt from "markdown-it";
 import { uuidv7 } from "uuidv7";
-import { Blog } from "./blog.ts";
-import { Comment } from "./comment.ts";
-import { openKv } from "./kv.ts";
+import { Blog } from "../blog.ts";
+import { Comment } from "../comment.ts";
+import { openKv } from "../kv.ts";
 
 export interface Post {
   uuid: string;
