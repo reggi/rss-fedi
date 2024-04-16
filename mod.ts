@@ -2,6 +2,7 @@ import { banner, home } from "./banner.ts";
 import { handle } from "./env.ts";
 import { federation, trigger, wipe } from "./fedi.ts";
 import { openKv } from "./kv.ts";
+import { getPost } from "./models/posts.ts";
 
 const kv = await openKv();
 
@@ -11,8 +12,22 @@ Deno.serve(async (req: Request) => {
 
   console.log(url.pathname);
 
+  const post = new URLPattern({ pathname: "/posts/:uuid" });
   if (url.pathname === "/trigger") {
     return await trigger(req);
+  } else if (post.test(url.pathname)) {
+    const result = post.exec(url.pathname);
+    if (result) {
+      const {
+        pathname: {
+          groups: { uuid },
+        },
+      } = result;
+      if (!uuid) return new Response("Not found", { status: 404 });
+      return new Response(JSON.stringify(await getPost(uuid)));
+    } else {
+      return new Response("Not found", { status: 404 });
+    }
   } else if (url.pathname === "/wipe") {
     return await wipe();
   } else if (url.pathname === "/") {
